@@ -15,13 +15,13 @@ public class PlatformTransition : MonoBehaviour
     [SerializeField] private GameEvent onPlatformFloating;
     [SerializeField] private GameEvent onPlatformNotFloating;
     [SerializeField] private GameEvent onLevelStart;
-    private Platform platform;
+    private PlatformManager platform;
 
     private int flag;
 
     private void Awake()
     {
-        platform = GetComponent<Platform>();
+        platform = GetComponent<PlatformManager>();
     }
 
     public void CallFloatLevelPlatforms()
@@ -42,6 +42,25 @@ public class PlatformTransition : MonoBehaviour
             yield return null;
         }
         onLevelStart.Raise();
+    }
+
+    public IEnumerator FloatDownCo(GameObject obj)
+    {
+        if (obj == null)
+            yield break;
+
+        yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 0.2f));
+
+        Vector3 targetPosition = new Vector3(obj.transform.position.x, -100f, obj.transform.position.z);
+        while (Vector3.Distance(obj.transform.position, targetPosition) > 0.1f)
+        {
+            targetPosition = new Vector3(obj.transform.position.x, -100f, obj.transform.position.z);
+            obj.transform.position = Vector3.Lerp(obj.transform.position, targetPosition, Time.deltaTime * speed/4);
+            yield return null;
+        }
+
+        obj.transform.position = targetPosition;
+        Destroy(obj);
     }
 
     IEnumerator FloatCo(GameObject obj)

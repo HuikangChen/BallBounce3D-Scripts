@@ -8,12 +8,16 @@ public class VerticalJiggle
 {
     #region Editor Variables
     [SerializeField]
+    [Tooltip("How long it will take the object to 'jiggle'.")]
 	private float _period = 0.5f;
 	[SerializeField]
+	[Tooltip("How high or low the object will move down/up.")]
 	private float _amplitude = 1.25f;
 	[SerializeField]
-	private int _cycles = 2;
+	[Tooltip("How many times the object will move down/up, one cycle is a dip and a spike, half a cycle is a dip.")]
+	private float _cycles = 2f;
 	[SerializeField]
+	[Tooltip("How much the object's 'jiggling' decreases over time (no significant difference if cycle is set to a half).")]
 	private float _decayRate = 0.5f;
     #endregion
     
@@ -23,7 +27,7 @@ public class VerticalJiggle
         _period = period;
         _amplitude = amplitude;
         _cycles = cycles;
-        _decayRate = decayRate;
+        _decayRate = decayRate;	
     }
 
 
@@ -43,6 +47,7 @@ public class VerticalJiggle
 	     	yield return null;
      	}
 
+     	//just to make sure that it goes back to its origin.
         t.position = new Vector3(t.position.x, _pivotPosition.y, t.position.z);
     }
     

@@ -7,7 +7,7 @@ using UnityEngine;
 public enum PlatformType { Rectangle, /*Circle,*/ ColorMapping };
 public class PlatformSpawner : MonoBehaviour
 {
-    public static Platform previousPlatform;
+    public static PlatformManager previousPlatform;
     public static Vector3 platformRootSavedPosition;
 
     [Tooltip("The shape the platform will be in")]
@@ -86,7 +86,7 @@ public class PlatformSpawner : MonoBehaviour
 
         if (platformGO != null)
         {
-            previousPlatform = platformGO.GetComponent<Platform>();
+            previousPlatform = platformGO.GetComponent<PlatformManager>();
         }
 
         platformGO = Instantiate(platformParent);
@@ -105,7 +105,7 @@ public class PlatformSpawner : MonoBehaviour
 
         if (previousPlatform != null)
         {
-            TranslatePlatformToAnchor(platformGO.GetComponent<Platform>(), previousPlatform);
+            TranslatePlatformToAnchor(platformGO.GetComponent<PlatformManager>(), previousPlatform);
 
         }
         else {
@@ -124,7 +124,7 @@ public class PlatformSpawner : MonoBehaviour
         platformRoot.transform.position = platformRootSavedPosition;
     }
 
-    void TranslatePlatformToAnchor(Platform plaform, Platform previousPlatform) {
+    void TranslatePlatformToAnchor(PlatformManager plaform, PlatformManager previousPlatform) {
         Transform startingAnchor = plaform.startingAnchor;
         Transform endingAnchor = previousPlatform.endAnchor;
         Vector3 offset = new Vector3(startingAnchor.position.x - endingAnchor.position.x, 0, startingAnchor.position.z - endingAnchor.position.z);
@@ -140,8 +140,7 @@ public class PlatformSpawner : MonoBehaviour
     }
 
     GameObject Apply2DArrayToPlatformComponent(GameObject platformGO, GameObject[,] arrayOfBricks) {
-        platformGO.GetComponent<Platform>().bricks = arrayOfBricks;
-        platformGO.GetComponent<Platform>().showable = new Seireilazed2DArray(arrayOfBricks);
+        
         return platformGO;
     }
         
@@ -158,7 +157,7 @@ public class PlatformSpawner : MonoBehaviour
         //Pixels of the image mapped
         Color32[] pixels = texture.GetPixels32(0);
         int indexOfPixel = 0;
-        Platform platformComponent = platformGO.GetComponent<Platform>();
+        PlatformManager platformComponent = platformGO.GetComponent<PlatformManager>();
         for (int i = 0; i < texture.height; ++i)
         {
             for (int j = 0; j < texture.width; ++j)

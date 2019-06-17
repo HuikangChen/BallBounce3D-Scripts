@@ -1,12 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/// <summary>
+/// The ball on the level map, only contains bouncing and it's basic physics
+/// </summary>
 
 public class LevelMapBall : MonoBehaviour
 {
-    [SerializeField] private RaycastCollisionDetection collisionDetection;
-    [SerializeField] private BallBounce ballBounce;
-    [SerializeField] private BallPhysics ballPhysics;
+    #region Unity Inspector Fields
+
+    [SerializeField]
+    private RaycastCollisionDetection collisionDetection;
+
+    [SerializeField]
+    private BallBounce ballBounce;
+
+    [SerializeField]
+    private BallPhysics ballPhysics;
+
+    #endregion
 
     private Transform ground; //The ground we detect with raycast
 
@@ -41,9 +52,9 @@ public class LevelMapBall : MonoBehaviour
         {
             ballBounce.Bounce(ref ballPhysics.velocity);
             HapticFeedback.Generate(UIFeedbackType.ImpactMedium);
-            if (ground.GetComponent<Brick>() != null)
+            if (ground.GetComponent<PlatformController>() != null)
             {
-                ground.GetComponent<Brick>().CallJiggle();
+                ground.GetComponent<PlatformController>().CallJiggle();
             }
         }
         ballPhysics.ApplyPhysics(transform);

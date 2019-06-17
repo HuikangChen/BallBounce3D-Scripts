@@ -99,17 +99,16 @@ public class BallController : MonoBehaviour
             HapticFeedback.Generate(UIFeedbackType.ImpactMedium);
             
             //if the platform we're hitting is a brick
-            if (ground.GetComponent<Brick>() != null)
+            if (ground.GetComponent<PlatformController>() != null)
             {
                 //Jiggle the brick
-                ground.GetComponent<Brick>().CallJiggle();
+                ground.GetComponent<PlatformController>().CallJiggle();
 
-                //If it is a victory playform and the level hasnt been won yet
                 if (ground.GetComponent<WinLevel>())
-                    //We will try to win game
                     ground.GetComponent<WinLevel>().TryWinGame();
+
                 //if not we will raise the events that we need to
-                else if (ground.GetComponent<VictoryTag>() == null)
+                if (ground.GetComponent<VictoryTag>() == null)
                 {
                     onNormalPlatformImpact.Raise();
                     onPlatformImpact.Raise();
