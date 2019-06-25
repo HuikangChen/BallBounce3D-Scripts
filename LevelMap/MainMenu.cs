@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Used in the Map Level Scene
-/// </summary>
-
-public class MainMenu : MonoBehaviour
+namespace BB3D.Levelmap
 {
-    [SerializeField]
-    private string gameLevel;
-
     /// <summary>
-    /// Loads our game from the map level, called by button
+    /// Used in the Map Level Scene
     /// </summary>
-    public void LoadGame()
+
+    public class MainMenu : MonoBehaviour
     {
-        SceneManager.LoadScene(gameLevel);
+        [SerializeField]
+        private string gameLevel;
+
+        /// <summary>
+        /// Loads our game from the map level, called by button
+        /// </summary>
+        public void LoadGame()
+        {
+            SceneManager.LoadScene(gameLevel);
+        }
     }
 }

@@ -1,8 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class VictoryTag : MonoBehaviour
+namespace BB3D.Utility
 {
-    
+    /// <summary>
+    /// Empty script Used for tagging
+    /// </summary>
+    public class VictoryTag : MonoBehaviour
+    {
+
+    }
 }

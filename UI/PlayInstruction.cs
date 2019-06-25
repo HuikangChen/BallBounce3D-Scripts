@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using BB3D.SO;
 
-public class PlayInstruction : MonoBehaviour
+namespace BB3D.UI
 {
-    [SerializeField] private IntVariable currentLevel;
-    [SerializeField] private GameObject playInstruction;
-
-    public void ShowPlayInstruction()
+    public class PlayInstruction : MonoBehaviour
     {
-        if (currentLevel.GetValue() == 1)
-            playInstruction.SetActive(true);
-        else
-            playInstruction.SetActive(false);
+        [SerializeField] private IntVariable currentLevel;
+        [SerializeField] private GameObject playInstruction;
+
+        public void ShowPlayInstruction()
+        {
+            if (currentLevel.GetValue() == 1)
+                playInstruction.SetActive(true);
+            else
+                playInstruction.SetActive(false);
+        }
     }
 }

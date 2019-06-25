@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/StringList")]
-public class StringListVariable : ScriptableObject
+namespace BB3D.SO
 {
-    public List<string> list = new List<string>();
+    [CreateAssetMenu(menuName = "Variables/StringList")]
+    public class StringListVariable : ScriptableObject
+    {
+        public List<string> list = new List<string>();
+    }
 }

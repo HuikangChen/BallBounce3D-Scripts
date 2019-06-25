@@ -1,62 +1,68 @@
 ﻿using UnityEngine;
+using BB3D.Ball;
+using BB3D.Platform;
+using BB3D.Utility;
 
-/// <summary>
-/// The ball on the level map, only contains bouncing and it's basic physics
-/// </summary>
-
-public class LevelMapBall : MonoBehaviour
+namespace BB3D.Levelmap
 {
-    #region Unity Inspector Fields
+    /// <summary>
+    /// The ball on the level map, only contains bouncing and it's basic physics
+    /// </summary>
 
-    [SerializeField]
-    private RaycastCollisionDetection collisionDetection;
-
-    [SerializeField]
-    private BallBounce ballBounce;
-
-    [SerializeField]
-    private BallPhysics ballPhysics;
-
-    #endregion
-
-    private Transform ground; //The ground we detect with raycast
-
-    private void Start()
+    public class LevelMapBall : MonoBehaviour
     {
-        collisionDetection.Init();
+        #region Unity Inspector Fields
 
-        ////Kinematics equations, gravity needs to be calculated based on the specified jump height and time it takes to get there 
-        ballPhysics.CalculateGravity(ballBounce.bounceHeight, ballBounce.timeToApex);
+        [SerializeField]
+        private RaycastCollisionDetection collisionDetection;
 
-        //////Next jump velocity is calculated based on the previously calculated gravity
-        ballBounce.Init(ballPhysics.gravity);
-    }
+        [SerializeField]
+        private BallBounce ballBounce;
 
-    private void FixedUpdate()
-    {
-        collisionDetection.CastRayCast();
+        [SerializeField]
+        private BallPhysics ballPhysics;
 
-        /* Since we are applying gravity constantly with our own physics, 
-         * we want to check if raycast hit anything, then we set the velocity.y back to 0, 
-           so our ball don't fall through the platform. 
-           We don't want to set velocity.y to 0 when bouncing, or else the ball won't bounce */
-        ballPhysics.ApplyVerticalCollision(collisionDetection);
+        #endregion
 
-        if (collisionDetection.collidedObject != null) // If our raycast system detects something
+        private Transform ground; //The ground we detect with raycast
+
+        private void Start()
         {
-            ground = collisionDetection.collidedObject.transform; // Set the ground variable to the detected gameobject 
+            collisionDetection.Init();
+
+            ////Kinematics equations, gravity needs to be calculated based on the specified jump height and time it takes to get there 
+            ballPhysics.CalculateGravity(ballBounce.BounceHeight, ballBounce.TimeToApex);
+
+            //////Next jump velocity is calculated based on the previously calculated gravity
+            ballBounce.Init(ballPhysics.Gravity);
         }
 
-        // If raycast hits something, we want the ball to bounce up 
-        if (collisionDetection.hasCollided)
+        private void FixedUpdate()
         {
-            ballBounce.Bounce(ref ballPhysics.velocity);
-            HapticFeedback.Generate(UIFeedbackType.ImpactMedium);
-            if (ground.GetComponent<PlatformController>() != null)
+            collisionDetection.CastRayCast();
+
+            /* Since we are applying gravity constantly with our own physics, 
+             * we want to check if raycast hit anything, then we set the velocity.y back to 0, 
+               so our ball don't fall through the platform. 
+               We don't want to set velocity.y to 0 when bouncing, or else the ball won't bounce */
+            ballPhysics.ApplyVerticalCollision(collisionDetection);
+
+            if (collisionDetection.collidedObject != null) // If our raycast system detects something
             {
-                ground.GetComponent<PlatformController>().CallJiggle();
+                ground = collisionDetection.collidedObject.transform; // Set the ground variable to the detected gameobject 
             }
+
+            // If raycast hits something, we want the ball to bounce up 
+            if (collisionDetection.hasCollided)
+            {
+                ballBounce.Bounce(ref ballPhysics.velocity);
+                HapticFeedback.Generate(UIFeedbackType.ImpactMedium);
+                if (ground.GetComponent<PlatformController>() != null)
+                {
+                    ground.GetComponent<PlatformController>().CallJiggle();
+                }
+            }
+            ballPhysics.ApplyPhysics(transform);
         }
-        ballPhysics.ApplyPhysics(transform);
     }
 }

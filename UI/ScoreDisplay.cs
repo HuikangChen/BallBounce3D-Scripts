@@ -1,62 +1,65 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using BB3D.SO;
 
-public class ScoreDisplay : MonoBehaviour
+namespace BB3D.UI
 {
-    public IntReference score;
-
-    [SerializeField]
-    private TextMeshProUGUI scoreDisplay;
-
-    [SerializeField]
-    private float targetSizeMultiplier;
-    [SerializeField]
-    private float growSpeed;
-    private Vector3 targetSize;
-    private Vector3 originalSize;
-
-    private void Awake()
+    public class ScoreDisplay : MonoBehaviour
     {
-        originalSize = scoreDisplay.transform.localScale;
-        targetSize = scoreDisplay.transform.localScale * targetSizeMultiplier;
-    }
+        public IntReference score;
 
-    public void Init()
-    {
-        scoreDisplay.text = score.Value + "";
-    }
+        [SerializeField]
+        private TextMeshProUGUI scoreDisplay;
 
-    public void SetScore(int score)
-    {
-        this.score.Variable.SetValue(score);
-        scoreDisplay.text = score.ToString();
-        StopCoroutine("SetScoreCo");
-        StartCoroutine("SetScoreCo");
-    }
+        [SerializeField]
+        private float targetSizeMultiplier;
+        [SerializeField]
+        private float growSpeed;
+        private Vector3 targetSize;
+        private Vector3 originalSize;
 
-    IEnumerator SetScoreCo()
-    {
-        while (Vector3.Distance(scoreDisplay.transform.localScale, targetSize) > 0.1f)
+        private void Awake()
         {
-            scoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplay.transform.localScale, targetSize, growSpeed * Time.deltaTime);
-            yield return null;
+            originalSize = scoreDisplay.transform.localScale;
+            targetSize = scoreDisplay.transform.localScale * targetSizeMultiplier;
         }
 
-        transform.localScale = targetSize;
-
-        while (Vector3.Distance(scoreDisplay.transform.localScale, originalSize) > 0.1f)
+        public void Init()
         {
-            scoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplay.transform.localScale, originalSize, growSpeed * Time.deltaTime);
-            yield return null;
+            scoreDisplay.text = score.Value + "";
         }
 
-        scoreDisplay.transform.localScale = originalSize;
-    }
+        public void SetScore(int score)
+        {
+            this.score.Variable.SetValue(score);
+            scoreDisplay.text = score.ToString();
+            StopCoroutine("SetScoreCo");
+            StartCoroutine("SetScoreCo");
+        }
 
-    public void ResetScore()
-    {
-        score.Variable.SetValue(0);
+        IEnumerator SetScoreCo()
+        {
+            while (Vector3.Distance(scoreDisplay.transform.localScale, targetSize) > 0.1f)
+            {
+                scoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplay.transform.localScale, targetSize, growSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            transform.localScale = targetSize;
+
+            while (Vector3.Distance(scoreDisplay.transform.localScale, originalSize) > 0.1f)
+            {
+                scoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplay.transform.localScale, originalSize, growSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            scoreDisplay.transform.localScale = originalSize;
+        }
+
+        public void ResetScore()
+        {
+            score.Variable.SetValue(0);
+        }
     }
 }

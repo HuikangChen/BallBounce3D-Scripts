@@ -1,28 +1,31 @@
 ﻿using System;
 
-[Serializable]
-public class BoolReference
+namespace BB3D.SO
 {
-    public bool UseConstant = true;
-    public bool ConstantValue;
-    public BoolVariable Variable;
-
-    public BoolReference()
-    { }
-
-    public BoolReference(bool value)
+    [Serializable]
+    public class BoolReference
     {
-        UseConstant = true;
-        ConstantValue = value;
-    }
+        public bool UseConstant = true;
+        public bool ConstantValue;
+        public BoolVariable Variable;
 
-    public bool Value
-    {
-        get { return UseConstant ? ConstantValue : Variable.GetValue(); }
-    }
+        public BoolReference()
+        { }
 
-    public static implicit operator bool(BoolReference reference)
-    {
-        return reference.Value;
+        public BoolReference(bool value)
+        {
+            UseConstant = true;
+            ConstantValue = value;
+        }
+
+        public bool Value
+        {
+            get { return UseConstant ? ConstantValue : Variable.GetValue(); }
+        }
+
+        public static implicit operator bool(BoolReference reference)
+        {
+            return reference.Value;
+        }
     }
 }

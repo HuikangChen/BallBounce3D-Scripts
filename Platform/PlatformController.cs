@@ -1,75 +1,83 @@
 ﻿using System.Collections;
 using UnityEngine;
+using BB3D.UI;
+using BB3D.Utility;
+using BB3D.Collectable;
 
-/// <summary>
-/// Controls each individual platform pieces, contains jiggling and impact
-/// </summary>
-
-public class PlatformController : MonoBehaviour
+namespace BB3D.Platform
 {
-    #region Unity Inspector Fields 
+    /// <summary>
+    /// Controls each individual platform pieces, contains jiggling and impact
+    /// </summary>
 
-    [Tooltip("How many hit/impacts should this platform platform have before it sinks/dies")]
-    [SerializeField] 
-	private int hitPoints;
-    
-    [SerializeField]
-	private VerticalJiggle vjiggle;
-
-    [SerializeField]
-    private Buoy buoy;
-
-    [Tooltip("The fx to spawn when platform is being impacted")]
-    [SerializeField]
-    private GameObject splashPrefab;
-
-    [Tooltip("The collectable child gameobject reference")]
-    [SerializeField]
-    private GameObject starCollectible;
-
-    #endregion
-
-    #region When Ball Hits Brick
-    public void CallJiggle()
+    public class PlatformController : MonoBehaviour
     {
-        StopCoroutine("OnImpact");
-        StartCoroutine("OnImpact");
-    }
+        #region Unity Inspector Fields 
 
-    IEnumerator OnImpact()
-    {
-        Instantiate(splashPrefab, transform);
+        [Tooltip("How many hit/impacts should this platform platform have before it sinks/dies")]
+        [SerializeField]
+        private int hitPoints;
 
+        [SerializeField]
+        private VerticalJiggle vjiggle;
 
-        yield return StartCoroutine(vjiggle.Jiggle(gameObject.transform));
-        yield return StartCoroutine(TakeHealth());
-    }
+        [SerializeField]
+        private Buoy buoy;
 
-    IEnumerator TakeHealth()
-    {
-    	if ( --hitPoints < 1 ) {
-            GivePoints();
-            yield return StartCoroutine(buoy.Sink(gameObject.transform));
-    		Break();
-    	}
+        [Tooltip("The fx to spawn when platform is being impacted")]
+        [SerializeField]
+        private GameObject splashPrefab;
 
-    	yield return null;
-    }
+        [Tooltip("The collectable child gameobject reference")]
+        [SerializeField]
+        private GameObject starCollectible;
 
-    void Break()
-    {
-        if (starCollectible != null)
+        #endregion
+
+        #region When Ball Hits Brick
+        public void CallJiggle()
         {
-            starCollectible.GetComponent<CollectablePickup>().PickUp();
+            StopCoroutine("OnImpact");
+            StartCoroutine("OnImpact");
         }
-        Destroy(gameObject);
+
+        IEnumerator OnImpact()
+        {
+            Instantiate(splashPrefab, transform);
+
+
+            yield return StartCoroutine(vjiggle.Jiggle(gameObject.transform));
+            yield return StartCoroutine(TakeHealth());
+        }
+
+        IEnumerator TakeHealth()
+        {
+            if (--hitPoints < 1)
+            {
+                GivePoints();
+                yield return StartCoroutine(buoy.Sink(gameObject.transform));
+                Break();
+            }
+
+            yield return null;
+        }
+
+        void Break()
+        {
+            if (starCollectible != null)
+            {
+                starCollectible.GetComponent<CollectablePickup>().PickUp();
+            }
+            Destroy(gameObject);
+        }
+
+        void GivePoints()
+        {
+            GameObject obj = ObjectPooler.instance.SpawnFromPool("ScorePopupText");
+            obj.GetComponent<ScorePopup>().Init(10);
+        }
+
+        #endregion
+
     }
-
-    void GivePoints() {
-        GameObject obj = ObjectPooler.instance.SpawnFromPool("ScorePopupText");
-        obj.GetComponent<ScorePopup>().Init(10);
-    }
-
-    #endregion
-
 }

@@ -1,75 +1,73 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using BB3D.SO;
+using BB3D.Level;
 
-/// <summary>
-/// Contains all the platforms that makes up a level, destroys platform on level win/lose
-/// </summary>
-
-public class PlatformManager : MonoBehaviour
+namespace BB3D.Platform
 {
-    #region Unity Inspector Fields
+    /// <summary>
+    /// Contains all the platforms that makes up a level, destroys platform on level win/lose
+    /// </summary>
 
-    [SerializeField]
-    private GameEvent onVictoryDestroy;
-
-    #endregion
-
-    [HideInInspector]
-    public List<GameObject> normalPlatforms = new List<GameObject>();
-
-    [HideInInspector]
-    public List<GameObject> victoryPlatforms = new List<GameObject>();
-
-    [HideInInspector]
-    public Transform startingAnchor;
-
-    [HideInInspector]
-    public Transform endAnchor;
-
-    private PlatformTransition transition;
-
-    private void Awake()
+    public class PlatformManager : MonoBehaviour
     {
-        transition = GetComponent<PlatformTransition>();
-    }
+        #region Unity Inspector Fields
 
-    public void DisableVictoryPlatforms()
-    {
-        for (int i = 0; i < victoryPlatforms.Count; i++)
+        [SerializeField]
+        private GameEvent onVictoryDestroy;
+
+        #endregion
+
+        [HideInInspector]
+        public List<GameObject> normalPlatforms = new List<GameObject>();
+
+        [HideInInspector]
+        public List<GameObject> victoryPlatforms = new List<GameObject>();
+
+        [HideInInspector]
+        public Transform startingAnchor;
+
+        [HideInInspector]
+        public Transform endAnchor;
+
+        private PlatformTransition transition;
+
+        private void Awake()
         {
-            Destroy(victoryPlatforms[i].GetComponent<WinLevel>());
-        }
-    }
-
-    public void DestroyNormalPlatforms()
-    {
-        for (int i = 0; i < normalPlatforms.Count; i++)
-        {
-            StartCoroutine(transition.FloatDownCo(normalPlatforms[i]));
-        }
-    }
-
-    public void TryDestroyVictoryPlatforms()
-    {
-        if (victoryPlatforms.Count == 0)
-            return;
-
-        if (victoryPlatforms[0].GetComponent<WinLevel>() != null)
-            return;
-
-        for (int i = 0; i < victoryPlatforms.Count; i++)
-        {
-            StartCoroutine(transition.FloatDownCo(victoryPlatforms[i]));
+            transition = GetComponent<PlatformTransition>();
         }
 
-        onVictoryDestroy.Raise();
-        Destroy(gameObject, 1f);
-    }
+        public void DisableVictoryPlatforms()
+        {
+            for (int i = 0; i < victoryPlatforms.Count; i++)
+            {
+                Destroy(victoryPlatforms[i].GetComponent<WinLevel>());
+            }
+        }
 
-    public void AddPlatformAsMoveTarget()
-    {
-        PlayerInput input = FindObjectOfType<PlayerInput>();
-        input.SetTarget(transform.root);
+        public void DestroyNormalPlatforms()
+        {
+            for (int i = 0; i < normalPlatforms.Count; i++)
+            {
+                StartCoroutine(transition.FloatDownCo(normalPlatforms[i]));
+            }
+        }
+
+        public void TryDestroyVictoryPlatforms()
+        {
+            if (victoryPlatforms.Count == 0)
+                return;
+
+            if (victoryPlatforms[0].GetComponent<WinLevel>() != null)
+                return;
+
+            for (int i = 0; i < victoryPlatforms.Count; i++)
+            {
+                StartCoroutine(transition.FloatDownCo(victoryPlatforms[i]));
+            }
+
+            onVictoryDestroy.Raise();
+            Destroy(gameObject, 1f);
+        }
     }
 }
